@@ -63,13 +63,6 @@ const LoginForm = ({ onLogin }) => {
         </div>
       )}
 
-      {/* Demo Credentials Info */}
-      <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg text-sm">
-        <p className="font-medium">Demo Credentials:</p>
-        <p>Username: <code>demo</code></p>
-        <p>Password: <code>password</code></p>
-      </div>
-
       {/* Username Field */}
       <div>
         <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
