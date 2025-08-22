@@ -82,7 +82,6 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
           const userResponse = await fetch(`/api/users/${currentUser._id}`);
           if (userResponse.ok) {
             const updatedUser = await userResponse.json();
-            console.log('🔄 Updated user data:', updatedUser);
             setCurrentUser(updatedUser);
           } else {
             console.error('❌ Failed to refresh user data:', userResponse.status);
@@ -207,7 +206,7 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
         createdAt: new Date().toISOString()
       };
 
-      console.log('Workout payload:', JSON.stringify(newWorkout, null, 2));
+      // console.log('Workout payload:', JSON.stringify(newWorkout, null, 2));
 
       const response = await fetch('/api/workouts', {
         method: 'POST',
