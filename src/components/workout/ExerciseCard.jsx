@@ -47,14 +47,14 @@ const ExerciseCard = ({ exercise, index, removeExercise, updateExercise }) => {
             placeholder="Reps"
             value={reps}
             onChange={(e) => setReps(e.target.value)}
-            className="border p-1 rounded w-20"
+            className="border p-1 rounded w-20 text-black"
           />
           <input
             type="number"
             placeholder="Weight"
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
-            className="border p-1 rounded w-24"
+            className="border p-1 rounded w-24 text-black"
           />
           <div>
             <button

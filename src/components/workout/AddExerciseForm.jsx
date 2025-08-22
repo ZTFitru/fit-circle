@@ -18,7 +18,7 @@ const AddExerciseForm = ({
         placeholder="Enter exercise name"
         value={newExerciseName}
         onChange={(e) => setNewExerciseName(e.target.value)}
-        className="w-full p-2 border rounded-lg mb-2"
+        className="w-full p-2 border rounded-lg mb-2 text-black"
       />
       <div className="flex gap-2">
         <button
