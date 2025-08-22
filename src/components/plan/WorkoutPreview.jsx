@@ -10,12 +10,12 @@ const WorkoutPreview = ({ selectedBodyPart, createWorkout, loading, error }) => 
   const exercises = EXERCISES_BY_BODY_PART[selectedBodyPart] || [];
 
   const handleCreateWorkout = async () => {
-    console.log('Create workout button clicked');
-    console.log('Selected body part:', selectedBodyPart);
-    console.log('Available exercises:', exercises);
+    // console.log('Create workout button clicked');
+    // console.log('Selected body part:', selectedBodyPart);
+    // console.log('Available exercises:', exercises);
     
     if (exercises.length === 0) {
-      console.error('No exercises available for', selectedBodyPart);
+      // console.error('No exercises available for', selectedBodyPart);
       return;
     }
     
