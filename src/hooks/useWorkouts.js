@@ -77,7 +77,6 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
       setCurrentWorkout(null);
 
       if (currentUser?._id && setCurrentUser) {
-        console.log('🔄 Refreshing current user data...');
         try {
           const userResponse = await fetch(`/api/users/${currentUser._id}`);
           if (userResponse.ok) {
@@ -230,7 +229,6 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
             const userResponse = await fetch(`/api/users/${currentUser._id}`);
             if (userResponse.ok) {
               const updatedUser = await userResponse.json();
-              console.log('🔄 Updated user data:', updatedUser);
               setCurrentUser(updatedUser);
             } else {
               console.error('❌ Failed to refresh user data:', userResponse.status);
@@ -252,7 +250,6 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
       setError(`Failed to create workout: ${error.message}`);
     } finally {
       setLoading(false);
-      console.log('=== END CREATE WORKOUT DEBUG ===');
     }
   }
 
@@ -267,7 +264,6 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
 
     if (response.ok) {
       setWorkouts(prev => prev.filter(w => w._id !== workoutId));
-      console.log('Workout deleted successfully');
     } else {
       const errorData = await response.text();
       throw new Error(`Failed to delete workout: ${response.status} - ${errorData}`);
