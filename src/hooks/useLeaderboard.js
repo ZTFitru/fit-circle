@@ -1,39 +1,50 @@
 'use client'
-import { useState, useEffect } from 'react';
-import { LEADERBOARD_DATA } from '../data/constants';
+import { useState, useEffect, useContext } from 'react';
+import { UserContext } from '@/context/UserContext';
 
 export const useLeaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedMetric, setSelectedMetric] = useState('totalWeight');
+  const [period, setPeriod] = useState('daily');
+  const { currentUser } = useContext(UserContext);
+
+  const fetchLeaderboard = async (selectedPeriod = period) => {
+    setLoading(true);
+    try {
+      let url = `/api/leaderboard?period=${selectedPeriod}`;
+      if (currentUser?._id) {
+        url += `&userId=${currentUser._id}`;
+      }
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        const ranked = data.map((u, idx) => ({
+          rank: idx + 1,
+          name: u.username,
+          avatar: u.avatar,
+          metric: 'Total Weight',
+          value: u.totalWeight,
+          _id: u._id,
+        }));
+        setLeaderboardData(ranked);
+      }
+    } catch (err) {
+      console.error('Failed to fetch leaderboard:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // api call
-    setTimeout(() => {
-      setLeaderboardData(LEADERBOARD_DATA);
-      setLoading(false);
-    }, 500);
-  }, []);
-
-  const sortByMetric = (metric) => {
-    setSelectedMetric(metric);
-    // add api call to get sorted data
-  };
-
-  const refreshLeaderboard = async () => {
-    setLoading(true);
-    // api refreash
-    setTimeout(() => {
-      setLeaderboardData([...LEADERBOARD_DATA]);
-      setLoading(false);
-    }, 1000);
-  };
+    fetchLeaderboard(period);
+  }, [period, currentUser?._id]);
 
   return {
     leaderboardData,
     loading,
-    selectedMetric,
-    sortByMetric,
-    refreshLeaderboard
+    period,
+    setPeriod,
+    refreshLeaderboard: () => fetchLeaderboard(period),
+    currentUser,
   };
 };
