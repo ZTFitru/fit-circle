@@ -53,7 +53,7 @@ const Header = ({ currentUser, onLogout }) => {
           <div className="text-xs text-blue-100">lbs Lifted</div>
         </div>
         <div className="text-center">
-          <div className="font-bold text-lg">3</div>
+          <div className="font-bold text-lg">{currentUser?.friends?.length || 0}</div>
           <div className="text-xs text-blue-100">Friends</div>
         </div>
       </div>
