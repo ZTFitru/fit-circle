@@ -12,14 +12,14 @@ const LeaderboardTab = () => {
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">Leaderboard</h2>
+      <h2 className="text-xl font-bold mb-4 text-black">Leaderboard</h2>
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-4 text-black">
         {['daily', 'weekly', 'monthly'].map((p) => (
           <button
             key={p}
             onClick={() => setPeriod(p)}
-            className={`px-3 py-1 rounded ${period === p ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+            className={`px-3 py-1 rounded ${period === p ? 'bg-green-200 text-black' : 'bg-gray-200'}`}
           >
             {p.charAt(0).toUpperCase() + p.slice(1)}
           </button>

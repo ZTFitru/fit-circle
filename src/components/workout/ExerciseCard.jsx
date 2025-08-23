@@ -25,7 +25,7 @@ const ExerciseCard = ({ exercise, index, removeExercise, updateExercise }) => {
   return (
     <div className="bg-white shadow-md rounded-lg p-4">
       <div className="flex justify-between items-center mb-2">
-        <h3 className="font-bold text-lg">{exercise.exerciseName}</h3>
+        <h3 className="font-bold text-lg text-black">{exercise.exerciseName}</h3>
         <button onClick={() => removeExercise(index)} className="text-red-500">
           <Trash2 size={18} />
         </button>

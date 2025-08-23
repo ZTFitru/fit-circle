@@ -17,7 +17,7 @@ const AddFriendForm = ({
         placeholder="Enter friend's username"
         value={newFriendName}
         onChange={(e) => setNewFriendName(e.target.value)}
-        className="w-full p-2 border rounded-lg mb-2"
+        className="w-full p-2 border rounded-lg mb-2 text-black"
       />
       <div className="flex gap-2">
         <button

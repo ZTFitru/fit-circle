@@ -10,12 +10,8 @@ const WorkoutPreview = ({ selectedBodyPart, createWorkout, loading, error }) => 
   const exercises = EXERCISES_BY_BODY_PART[selectedBodyPart] || [];
 
   const handleCreateWorkout = async () => {
-    // console.log('Create workout button clicked');
-    // console.log('Selected body part:', selectedBodyPart);
-    // console.log('Available exercises:', exercises);
     
     if (exercises.length === 0) {
-      // console.error('No exercises available for', selectedBodyPart);
       return;
     }
     
@@ -28,7 +24,7 @@ const WorkoutPreview = ({ selectedBodyPart, createWorkout, loading, error }) => 
 
   return (
     <div className="mt-6 bg-gray-50 p-4 rounded-lg">
-      <h3 className="font-bold mb-3 capitalize">{selectedBodyPart} Exercises:</h3>
+      <h3 className="font-bold mb-3 capitalize text-black">{selectedBodyPart} Exercises:</h3>
       
       {exercises.length === 0 ? (
         <div className="flex items-center gap-2 text-amber-600 mb-4">
@@ -38,7 +34,7 @@ const WorkoutPreview = ({ selectedBodyPart, createWorkout, loading, error }) => 
       ) : (
         <div className="space-y-2 mb-4">
           {exercises.slice(0, 3).map((exercise, index) => (
-            <div key={index} className="bg-white p-2 rounded text-sm">
+            <div key={index} className="bg-white text-black p-2 rounded text-sm">
               {typeof exercise === 'string' ? exercise : exercise.exerciseName || 'Unknown Exercise'}
             </div>
           ))}

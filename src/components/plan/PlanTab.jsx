@@ -9,7 +9,7 @@ const PlanTab = ({
   createWorkout 
 }) => (
   <div>
-    <h2 className="text-xl font-bold mb-4">Plan Your Workout</h2>
+    <h2 className="text-xl font-bold mb-4 text-black">Plan Your Workout</h2>
     <p className="text-gray-600 mb-4">Choose a body part to focus on:</p>
     
     <BodyPartGrid 

@@ -8,7 +8,7 @@ const BodyPartGrid = ({ selectedBodyPart, setSelectedBodyPart }) => (
       <button
         key={bodyPart.name}
         onClick={() => setSelectedBodyPart(bodyPart.name)}
-        className={`p-4 rounded-lg text-white font-medium transition-transform ${
+        className={`p-4 rounded-lg text-black font-medium transition-transform ${
           bodyPart.color
         } ${selectedBodyPart === bodyPart.name ? 'scale-95' : 'hover:scale-105'}`}
       >

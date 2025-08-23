@@ -8,7 +8,7 @@ const FriendCard = ({ friend, onRemove }) => (
       <div className="flex items-center gap-3">
         <div className="text-2xl">{friend.avatar}</div>
         <div>
-          <h3 className="font-medium">{friend.username}</h3>
+          <h3 className="font-medium text-black">{friend.username}</h3>
           <p className="text-sm text-gray-500">
             {friend.totalWeight.toLocaleString()} lbs • {friend.bestRun}
           </p>
