@@ -1,8 +1,5 @@
 'use client'
-
 const { useState } = require("react")
-
-
 const ForgotPassword = ()=> {
     const [usernameOrEmail, setUsernameOrEmail] = useState('')
     const [message, setMessage] = useState('')

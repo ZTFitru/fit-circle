@@ -26,14 +26,14 @@ const LeaderboardItem = ({ user, currentUser }) => {
           </div>
           <div className="text-2xl">{user.avatar}</div>
           <div>
-            <h3 className={`font-medium ${isCurrentUser ? 'text-blue-700' : ''}`}>
+            <h3 className={`font-medium text-black ${isCurrentUser ? 'text-blue-700' : ''}`}>
               {user.name} {isCurrentUser && '(You)'}
             </h3>
             <p className="text-sm text-gray-500">{user.metric}</p>
           </div>
         </div>
         <div className="text-right">
-          <div className="font-bold text-lg">{user.value}</div>
+          <div className="font-bold text-lg text-black">{user.value}</div>
         </div>
       </div>
     </div>

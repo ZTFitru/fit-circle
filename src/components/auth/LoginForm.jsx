@@ -76,7 +76,7 @@ const LoginForm = ({ onLogin }) => {
             name="username"
             value={formData.username}
             onChange={handleInputChange}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
             placeholder="Enter your username"
           />
         </div>
@@ -95,7 +95,7 @@ const LoginForm = ({ onLogin }) => {
             name="password"
             value={formData.password}
             onChange={handleInputChange}
-            className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
             placeholder="Enter your password"
           />
           <button

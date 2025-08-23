@@ -4,13 +4,13 @@ import { Play, Check, Trash2 } from 'lucide-react';
 
 const WorkoutList = ({ workouts, startWorkout, deleteWorkout }) => (
   <div>
-    <h2 className="text-xl font-bold mb-4">My Workouts</h2>
+    <h2 className="text-xl font-bold mb-4 text-black">My Workouts</h2>
     <div className="space-y-3">
       {workouts.map(workout => (
         <div key={workout._id} className="bg-white p-4 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-medium">{workout.name}</h3>
+              <h3 className="font-medium text-black">{workout.name}</h3>
               <p className="text-sm text-gray-500">
                 {workout.exercises.length} exercises • {workout.bodyPart}
               </p>
