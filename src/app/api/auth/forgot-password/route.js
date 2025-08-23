@@ -2,6 +2,7 @@ import { connectDB } from "@/lib/mongodb";
 import User from '@/models/User';
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
+import nodemailer from 'nodemailer'
 
 export async function POST(req) {
     await connectDB();
@@ -29,9 +30,30 @@ export async function POST(req) {
     await user.save();
 
     const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/reset-password?token=${resetToken}`;
-
-    return NextResponse.json({
-        message: 'Rest link generated',
-        resetUrl,
-    })
+    try {
+        await transporter.sendMail({
+            from: `'FITCircle Support' <${process.env.EMAIL_USER}>`,
+            to: user.email, 
+            subject: 'Password Reset Request',
+            html: `
+                <p>Hello ${user.username},</p>
+                <p>You requested to reset your password. Please click the link below to reset it:</p>
+                <a href='${resetUrl}' target='_blank'>${resetUrl}</a>
+                <p>This link will expire in 1 hour.</p>           `
+        });
+        return NextResponse.json({
+            message: 'If an account exists, a password reset link has been sent to your email.'
+        }, { status: 200})
+    } catch (err) {
+        console.error('Error sending email:', err)
+        return NextResponse.json({ error: 'Failed to send reset email'}, {status: 500})
+    }
 }
+
+const transporter = nodemailer.createTransport({
+    service: 'Gmail', 
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    }
+})

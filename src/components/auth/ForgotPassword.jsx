@@ -31,7 +31,7 @@ const ForgotPassword = ()=> {
             <h2 className='text-xl font-bold mb-4'>
                 Forgot Password
             </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 text-black">
                 <input 
                     type="text" 
                     placeholder="Enter your username or email"
