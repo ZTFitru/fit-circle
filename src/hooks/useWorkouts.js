@@ -11,7 +11,6 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
   const [error, setError] = useState(null);
   const router = useRouter();
 
-  // Fetch workouts from MongoDB on component mount
   useEffect(() => {
     fetchWorkouts();
   }, [currentUser?._id]);
@@ -42,74 +41,69 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
   };
 
   const completeWorkout = async () => {
-  
-  if (!currentWorkout) {
-    return;
-  }
-  
-  
-  try {
-    setLoading(true);
-    setError(null);
-    
-    const requestBody = {
-      ...currentWorkout,
-      completed: true,
-      completedAt: new Date().toISOString()
-    };
-    
-    // Update workout in database
-    const response = await fetch(`/api/workouts/${currentWorkout._id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    });
 
-    if (response.ok) {
-      const updatedWorkout = await response.json();
-      
-      // Update local state
-      setWorkouts(workouts.map(w => 
-        w._id === currentWorkout._id ? updatedWorkout : w
-      ));
-      setCurrentWorkout(null);
-
-      if (currentUser?._id && setCurrentUser) {
-        try {
-          const userResponse = await fetch(`/api/users/${currentUser._id}`);
-          if (userResponse.ok) {
-            const updatedUser = await userResponse.json();
-            setCurrentUser(updatedUser);
-          } else {
-            console.error('❌ Failed to refresh user data:', userResponse.status);
-          }
-        } catch (userError) {
-          console.error('❌ Error fetching updated user data:', userError);
-        }
-      } else {
-        console.log('ℹ️ currentUser._id or setCurrentUser not available, skipping user refresh');
-      }
-      router.push('/');
-      
-    } else {
-      const errorData = await response.text();
-      throw new Error(`Failed to complete workout: ${response.status} - ${errorData}`);
+    if (!currentWorkout) {
+      return;
     }
-  } catch (error) {
-    console.error('💥 Error completing workout:', error);
-    console.error('💥 Error stack:', error.stack);
-    setError('Failed to complete workout');
-  } finally {
-    setLoading(false);
-  }
-};
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const requestBody = {
+        ...currentWorkout,
+        completed: true,
+        completedAt: new Date().toISOString()
+      };
+
+      const response = await fetch(`/api/workouts/${currentWorkout._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        const updatedWorkout = await response.json();
+        setWorkouts(workouts.map(w =>
+          w._id === currentWorkout._id ? updatedWorkout : w
+        ));
+        setCurrentWorkout(null);
+
+        if (currentUser?._id && setCurrentUser) {
+          try {
+            const userResponse = await fetch(`/api/users/${currentUser._id}`);
+            if (userResponse.ok) {
+              const updatedUser = await userResponse.json();
+              setCurrentUser(updatedUser);
+            } else {
+              console.error('❌ Failed to refresh user data:', userResponse.status);
+            }
+          } catch (userError) {
+            console.error('❌ Error fetching updated user data:', userError);
+          }
+        } else {
+          console.log('ℹ️ currentUser._id or setCurrentUser not available, skipping user refresh');
+        }
+        router.push('/');
+
+      } else {
+        const errorData = await response.text();
+        throw new Error(`Failed to complete workout: ${response.status} - ${errorData}`);
+      }
+    } catch (error) {
+      console.error('💥 Error completing workout:', error);
+      console.error('💥 Error stack:', error.stack);
+      setError('Failed to complete workout');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const updateCurrentWorkout = async (updatedWorkout) => {
     try {
       setError(null);
-      // Save to database
       const response = await fetch(`/api/workouts/${updatedWorkout._id}`, {
         method: 'PUT',
         headers: {
@@ -121,9 +115,7 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
       if (response.ok) {
         const savedWorkout = await response.json();
         setCurrentWorkout(savedWorkout);
-        
-        // Update local state
-        setWorkouts(workouts.map(w => 
+        setWorkouts(workouts.map(w =>
           w._id === savedWorkout._id ? savedWorkout : w
         ));
 
@@ -157,9 +149,9 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
       ...currentWorkout,
       exercises: [
         ...currentWorkout.exercises,
-        { 
-          exerciseName: newExerciseName.trim(), 
-          sets: [] 
+        {
+          exerciseName: newExerciseName.trim(),
+          sets: []
         }
       ]
     };
@@ -170,11 +162,11 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
   };
 
   const createWorkout = async (bodyPart, exercises) => {
-    
+
     try {
       setLoading(true);
       setError(null);
-      
+
       if (!currentUser?._id) {
         console.error('No user logged in or no user ID');
         setError('You must be logged in to create a workout');
@@ -192,7 +184,7 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
         setError('No exercises available for this body part');
         return;
       }
-      
+
       const newWorkout = {
         userId: currentUser._id,
         name: `${bodyPart.charAt(0).toUpperCase() + bodyPart.slice(1)} Day`,
@@ -205,8 +197,6 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
         createdAt: new Date().toISOString()
       };
 
-      // console.log('Workout payload:', JSON.stringify(newWorkout, null, 2));
-
       const response = await fetch('/api/workouts', {
         method: 'POST',
         headers: {
@@ -217,10 +207,7 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
 
       if (response.ok) {
         const responseData = await response.json();
-        
-        // Handle both response formats
         const savedWorkout = responseData.workout || responseData;
-        
         setWorkouts(prevWorkouts => [...prevWorkouts, savedWorkout]);
         setSelectedBodyPart('');
 
@@ -254,27 +241,92 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
   }
 
   const deleteWorkout = async (workoutId) => {
-  try {
-    setLoading(true);
-    setError(null);
+    try {
+      setLoading(true);
+      setError(null);
 
-    const response = await fetch(`/api/workouts/${workoutId}`, {
-      method: 'DELETE',
-    });
+      const response = await fetch(`/api/workouts/${workoutId}`, {
+        method: 'DELETE',
+      });
 
-    if (response.ok) {
-      setWorkouts(prev => prev.filter(w => w._id !== workoutId));
-    } else {
-      const errorData = await response.text();
-      throw new Error(`Failed to delete workout: ${response.status} - ${errorData}`);
+      if (response.ok) {
+        setWorkouts(prev => prev.filter(w => w._id !== workoutId));
+      } else {
+        const errorData = await response.text();
+        throw new Error(`Failed to delete workout: ${response.status} - ${errorData}`);
+      }
+    } catch (error) {
+      console.error('Error deleting workout:', error);
+      setError('Failed to delete workout');
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error('Error deleting workout:', error);
-    setError('Failed to delete workout');
-  } finally {
-    setLoading(false);
+  };
+
+  const createCustomWorkout = async (customName, customExercises)=> {
+    if (!customName.trim() || customExercises.length === 0) {
+      setError('Custom workout requires a name and at least one exercise')
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null)
+
+      if (!currentUser?._id) {
+        setError('You must be logged in to create a workout')
+        return;
+      }
+      const newWorkout = {
+        userId: currentUser._id,
+        name: customName.trim(),
+        exercises: customExercises.map(name => ({
+          exerciseName: String(name).trim(),
+          sets: []
+        })),
+        completed: false,
+        createdAt: new Date().toISOString()
+      }
+
+      const response = await fetch('/api/workouts', {
+        method: 'POST',
+        headers: { 'Content--Type': 'application/json'},
+        body: JSON.stringify(newWorkout),
+      })
+
+      if (response.ok) {
+        const responseData = await response.json();
+        const savedWorkout = responseData.workout || responseData;
+
+        setWorkouts(prev => [...prev, savedWorkout])
+        setSelectedBodyPart('')
+
+        if (currentUser?._id && setCurrentUser) {
+          try {
+            const userResponse = await fetch(`/api/users/${currentUser._id}`)
+            if (userResponse.ok) {
+              const updatedUser = await userResponse.json()
+              setCurrentUser(updatedUser)
+            } else {
+              console.error('❌ Failed to refresh user data:', userResponse.status)
+            }
+          } catch (userError) {
+            console.error('❌ Error fetching updated user data:', userError)
+          }
+        }
+      } else {
+        const errorData = await response.text()
+        throw new Error(`Failed to create custom workout: ${response.status} - ${errorData}` )
+      }
+    }catch (error) {
+      console.error('Error creating custom workout:', error)
+      setError(`Failed to create custom workout: ${error.message}`)
+    } finally {
+      setLoading(false)
+    }
   }
-};
+
+
 
   return {
     workouts,
@@ -294,6 +346,7 @@ export const useWorkouts = (currentUser, setCurrentUser) => {
     updateCurrentWorkout,
     setCurrentWorkout,
     deleteWorkout,
+    createCustomWorkout,
     clearError: () => setError(null)
   };
 };

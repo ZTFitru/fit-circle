@@ -1,11 +1,33 @@
 'use client'
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus, AlertCircle } from 'lucide-react';
 import { EXERCISES_BY_BODY_PART } from '../../data/constants';
 
-const WorkoutPreview = ({ selectedBodyPart, createWorkout, loading, error }) => {
+const WorkoutPreview = ({ selectedBodyPart, createWorkout, loading, createCustomWorkout, error }) => {
   
   if (!selectedBodyPart) return null;
+
+  const [customName, setCustomName] = useState('');
+  const [customExercise, setCustomExercise] = useState('');
+  const [customExercises, setCustomExercises] = useState([]);
+
+  const handleCreateCustomWorkout = async (name, exercisesList) => {
+    try {
+      await createCustomWorkout(name, exercisesList);
+      setCustomName('');
+      setCustomExercise('');
+      setCustomExercises([]);
+    } catch (err) {
+      console.error('Error creating custom workout:', err);
+    }
+  };
+
+  const addCustomExercise = () => {
+    const name = (customExercise || '').trim();
+    if (!name) return;
+    setCustomExercises(prev => [...prev, name]);
+    setCustomExercise('');
+  };
 
   const exercises = EXERCISES_BY_BODY_PART[selectedBodyPart] || [];
 
@@ -21,6 +43,64 @@ const WorkoutPreview = ({ selectedBodyPart, createWorkout, loading, error }) => 
       console.error('Error in handleCreateWorkout:', error);
     }
   };
+
+  if (selectedBodyPart === 'custom') {
+    return (
+      <div className="mt-6 bg-gray-50 p-4 rounded-lg">
+        <h3 className="font-bold mb-3 text-black">Custom Workout</h3>
+
+        <input
+          type="text"
+          placeholder="Workout Name"
+          value={customName}
+          onChange={(e) => setCustomName(e.target.value)}
+          className="w-full p-2 border rounded mb-3"
+        />
+
+        <div className="flex gap-2 mb-2">
+          <input
+            type="text"
+            placeholder="Add Exercise"
+            value={customExercise}
+            onChange={(e) => setCustomExercise(e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+          <button
+            onClick={addCustomExercise}
+            type="button"
+            className="px-3 py-2 rounded bg-blue-500 text-white"
+          >
+             Add
+          </button>
+        </div>
+
+        {customExercises.length > 0 && (
+          <ul className="mb-4 space-y-2">
+            {customExercises.map((ex, i) => (
+              <li key={`${ex}-${i}`} className="bg-white p-2 rounded text-sm text-black">
+                {ex}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {error && (
+          <div className="flex items-center gap-2 text-red-600 mb-4 p-2 bg-red-50 rounded">
+            <AlertCircle size={16} />
+            <span className="text-sm">{error}</span>
+          </div>
+        )}
+
+        <button
+          onClick={() => handleCreateCustomWorkout(customName, customExercises)}
+          disabled={loading || customExercises.length === 0 || !customName.trim()}
+          className="w-full py-2 rounded-lg font-medium bg-purple-500 text-white disabled:bg-gray-300 disabled:text-gray-500"
+        >
+          {loading ? 'Creating...' : 'Create Custom Workout'}
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-6 bg-gray-50 p-4 rounded-lg">
