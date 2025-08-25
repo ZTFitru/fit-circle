@@ -6,7 +6,10 @@ import WorkoutPreview from './WorkoutPreview';
 const PlanTab = ({ 
   selectedBodyPart, 
   setSelectedBodyPart, 
-  createWorkout 
+  createWorkout,
+  createCustomWorkout,
+  loading,
+  error
 }) => (
   <div>
     <h2 className="text-xl font-bold mb-4 text-black">Plan Your Workout</h2>
@@ -17,9 +20,21 @@ const PlanTab = ({
       setSelectedBodyPart={setSelectedBodyPart}
     />
 
+    <div className='mt-6'>
+      <button 
+        className='w-full py-3 rounded-lg bg-purple-500 text-white font-bold hover:bg-purple-600'
+        onClick={() => setSelectedBodyPart('custom')}
+      >
+        Custom Workout
+      </button>
+    </div>
+
     <WorkoutPreview 
       selectedBodyPart={selectedBodyPart}
       createWorkout={createWorkout}
+      createCustomWorkout={createCustomWorkout}
+      loading={loading}
+      error={error}
     />
   </div>
 );
