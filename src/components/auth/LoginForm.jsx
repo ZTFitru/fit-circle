@@ -1,8 +1,10 @@
 'use client'
 import React, { useState } from 'react';
 import { Eye, EyeOff, User, Lock } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const LoginForm = ({ onLogin }) => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -112,6 +114,7 @@ const LoginForm = ({ onLogin }) => {
       <div className="text-right">
         <button
           type="button"
+          onClick={()=> router.push('/auth/forgot-password')}
           className="text-sm text-red-600 hover:text-red-700 transition-colors"
         >
           Forgot password?
