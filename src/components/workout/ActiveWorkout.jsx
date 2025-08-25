@@ -102,6 +102,12 @@ const ActiveWorkout = ({
         <Check size={20} />
         Complete Workout
       </button>
+      <button
+        onClick={()=> setCurrentWorkout(null)}
+        className="w-full bg-gray-400 text-white py-3 rounded-lg font-bold mt-2 flex items-center justify-center gap-2"
+      >
+        Cancel
+      </button>
     </div>
   )
 }
