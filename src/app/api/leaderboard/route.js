@@ -7,10 +7,13 @@ import mongoose from "mongoose";
 export async function GET(req) {
   try {
     await connectDB();
-
     const { searchParams } = new URL(req.url);
     const period = searchParams.get("period") || "daily";
     const userId = searchParams.get("userId");
+    const validPeriods = ['daily', 'weekly', 'monthly'];
+    if (!validPeriods.includes(period)) {
+      return NextResponse.json({ error: "Invalid period. Must be daily, weekly, or monthly" }, { status: 400 });
+    }
 
     const now = new Date();
     let startDate;
@@ -23,15 +26,17 @@ export async function GET(req) {
     } else if (period === "monthly") {
       startDate = new Date();
       startDate.setMonth(startDate.getMonth() - 1);
-    } else {
-      return NextResponse.json({ error: "Invalid period" }, { status: 400 });
     }
 
     let allowedIds = [];
     if (userId && mongoose.Types.ObjectId.isValid(userId)) {
-      const currentUser = await User.findById(userId).select("friends _id");
-      if (currentUser) {
-        allowedIds = [currentUser._id, ...(currentUser.friends || [])];
+      try {
+        const currentUser = await User.findById(userId).select("friends _id");
+        if (currentUser) {
+          allowedIds = [currentUser._id, ...(currentUser.friends || [])];
+        }
+      } catch (userErr) {
+        console.error('Error fetching user:', userErr);
       }
     }
     const matchStage = { date: { $gte: startDate } };
@@ -39,43 +44,57 @@ export async function GET(req) {
       matchStage.user = { $in: allowedIds };
     }
     const leaderboard = await Workout.aggregate([
-        { $match: matchStage },
-        { $unwind: "$exercises" },      
-        { $unwind: "$exercises.sets" }, 
-        {
-            $group: {
-                _id: "$user",
-                totalWeight: {
-                    $sum: {
-                        $multiply: [
-                            { $ifNull: ["$exercises.sets.reps", 0] },
-                            { $ifNull: ["$exercises.sets.weight", 0] }
-                        ]
-                    }
-                }
+      { $match: matchStage },
+      { $unwind: { path: "$exercises", preserveNullAndEmptyArrays: false } },      
+      { $unwind: { path: "$exercises.sets", preserveNullAndEmptyArrays: false } }, 
+      {
+        $group: {
+          _id: "$user",
+          totalWeight: {
+            $sum: {
+              $multiply: [
+                { $ifNull: ["$exercises.sets.reps", 0] },
+                { $ifNull: ["$exercises.sets.weight", 0] }
+              ]
             }
-        },
-        { $sort: { totalWeight: -1 } },
-        { $limit: 20 }
+          }
+        }
+      },
+      { $sort: { totalWeight: -1 } },
+      { $limit: 20 }
     ]);
 
+    if (leaderboard.length === 0) {
+      return NextResponse.json([], { status: 200 });
+    }
+    const userIds = leaderboard.map(item => item._id);
     const users = await User.find({
-      _id: { $in: leaderboard.map(item => item._id) }
+      _id: { $in: userIds }
     }).select("username avatar");
-
     const result = leaderboard.map((item) => {
       const user = users.find(u => u._id.toString() === item._id.toString());
       return {
         _id: item._id,
-        username: user?.username || "Unknown",
+        username: user?.username || "Unknown User",
         avatar: user?.avatar || "👤",
         totalWeight: Math.round(item.totalWeight * 100) / 100 
       };
     });
+    return NextResponse.json(result, { 
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-    return NextResponse.json(result, { status: 200 });
   } catch (err) {
     console.error("Leaderboard error:", err);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    console.error("Error stack:", err.stack);
+    
+    return NextResponse.json({ 
+      error: "Internal server error",
+      message: err.message,
+      ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    }, { status: 500 });
   }
 }
