@@ -16,7 +16,7 @@ const FriendCard = ({ friend, onRemove }) => (
       </div>
       <button
         onClick={()=> onRemove(friend._id)}
-        className='text-red-500 hover:text-red700'
+        className='text-red-500 hover:text-red-700'
       >
         Remove
       </button>

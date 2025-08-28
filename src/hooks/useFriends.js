@@ -4,12 +4,11 @@ import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '@/context/UserContext';
 
 export const useFriends = () => {
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, refreshUser } = useContext(UserContext);
   const [friends, setFriends] = useState([]);
   const [showAddFriend, setShowAddFriend] = useState(false);
   const [newFriendName, setNewFriendName] = useState('');
 
-  // Fetch friends when user changes
   useEffect(() => {
     if (!currentUser?._id) return;
 
@@ -44,10 +43,9 @@ export const useFriends = () => {
       if (res.ok) {
         setNewFriendName('');
         setShowAddFriend(false);
-
-        // Refetch friends
         const updatedRes = await fetch(`/api/friends/${currentUser._id}`);
         setFriends(await updatedRes.json());
+        refreshUser();
       }
     } catch (err) {
       console.error('Failed to add friend:', err);
@@ -65,9 +63,9 @@ export const useFriends = () => {
       });
 
       if (res.ok) {
-        // Refetch friends
         const updatedRes = await fetch(`/api/friends/${currentUser._id}`);
         setFriends(await updatedRes.json());
+        refreshUser()
       }
     } catch (err) {
       console.error('Failed to remove friend:', err);
