@@ -63,7 +63,20 @@ export default function Home() {
       case 'plan':
         return <PlanTab {...workoutHook} />;
       case 'friends':
-        return <FriendsTab {...friendsHook} />;
+        return (
+          <FriendsTab
+            friends={friendsHook.friends}
+            showAddFriend={friendsHook.showAddFriend}
+            setShowAddFriend={friendsHook.setShowAddFriend}
+            newFriendName={friendsHook.newFriendName}
+            setNewFriendName={friendsHook.setNewFriendName}
+            addFriend={friendsHook.addFriend}
+            removeFriend={friendsHook.removeFriend}
+            requests={friendsHook.requests}
+            acceptRequest={friendsHook.acceptRequest}
+            rejectRequest={friendsHook.rejectRequest}
+          />
+        );
       case 'leaderboard':
         return <LeaderboardTab />;
       default:

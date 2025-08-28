@@ -4,11 +4,12 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { LogOut, Settings } from "lucide-react";
+import { useFriends } from "@/hooks/useFriends";
 
 const Header = ({ currentUser, onLogout }) => {
   const [showMenu, setShowMenu] = useState(false);
   const router = useRouter();
-
+  const { requests} = useFriends()
   return (
     <div className="bg-gradient-to-r from-gray-900 via-black to-gray-700 text-white p-4">
       <div className="flex items-center justify-between">
@@ -62,9 +63,12 @@ const Header = ({ currentUser, onLogout }) => {
           <div className="font-bold text-lg">{currentUser?.totalWeight?.toLocaleString?.() || 0}</div>
           <div className="text-xs text-blue-100">lbs Lifted</div>
         </div>
-        <div className="text-center">
+        <div className="text-center relative">
           <div className="font-bold text-lg">{currentUser?.friends?.length || 0}</div>
           <div className="text-xs text-blue-100">Friends</div>
+            {requests.length > 0 && (
+              <span className="absolute -top-2 right-3 h-3 w-3 bg-red-500 rounded-full"></span>
+            )}
         </div>
       </div>
 
