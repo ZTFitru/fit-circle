@@ -27,7 +27,7 @@ export async function GET(req, { params }) {
 export async function DELETE(req, { params }) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = await params;
     const { friendId } = await req.json();
 
     if (!friendId) {
@@ -38,8 +38,6 @@ export async function DELETE(req, { params }) {
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
-
-    // removes the friend from the friend list
     user.friends = user.friends.filter(fid => fid.toString() !== friendId);
     await user.save();
 

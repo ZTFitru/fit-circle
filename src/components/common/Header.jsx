@@ -1,11 +1,13 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { LogOut, Settings } from "lucide-react";
 
 const Header = ({ currentUser, onLogout }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="bg-gradient-to-r from-gray-900 via-black to-gray-700 text-white p-4">
@@ -32,7 +34,15 @@ const Header = ({ currentUser, onLogout }) => {
                 Settings
               </button>
               <button
-                onClick={onLogout}
+                onClick={async () => {
+                  try {
+                    await fetch("/api/auth/logout", { method: "POST" });
+                    if (onLogout) onLogout();
+                    router.push("/");
+                  } catch (err) {
+                    console.error("Logout failed", err);
+                  }
+                }}
                 className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 w-full text-left"
               >
                 <LogOut size={16} />

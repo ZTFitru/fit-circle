@@ -24,10 +24,18 @@ export async function POST(req) {
     { expiresIn: '7d' }
   );
 
-  const fullUser = await User.findById(user._id).select('-password');
-  return NextResponse.json({
-    token,
-    // user: { _id: user._id, username: user.username, email: user.email },
-    user: fullUser,
-  });
+  const res = NextResponse.json({
+    message: 'Login successful',
+    user: { _id: user._id, username: user.username, email: user.email}
+  })
+
+  res.cookies.set('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 7,
+    sameSite: 'strict',
+    path: '/'
+  })
+
+  return res;
 }

@@ -20,7 +20,7 @@ export async function POST(req) {
     }
 
     const resetToken = jwt.sign(
-        { id: user},
+        { id: user._id},
         process.env.JWT_SECRET || 'default_secret_key',
         { expiresIn: '1h'}
     )
