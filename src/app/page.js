@@ -14,47 +14,33 @@ import { UserContext } from '@/context/UserContext';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('workout');
-  const { currentUser, setCurrentUser } = useContext(UserContext);
-  const [loading, setLoading] = useState(true)
-  const workoutHook = useWorkouts(currentUser, setCurrentUser) 
-  const friendsHook = useFriends()
+  const { currentUser, setCurrentUser, loading } = useContext(UserContext);
+  const workoutHook = useWorkouts();
+  const friendsHook = useFriends();
 
-  useEffect(()=> {
-    const checkSession = ()=> {
-      const savedUser = localStorage.getItem('fittracker_user')
-      if (savedUser) {
-        try {
-          setUser(JSON.parse(savedUser))
-        } catch (e) {
-          localStorage.removeItem('fittracker_user')
-        }
-      }
-      setLoading(false)
-    }
-    checkSession()
-  }, [setCurrentUser])
-
-  const handleLogin = (userData, token)=> {
+  const handleLogin = (userData, token) => {
     const backendUser = {
       _id: userData._id,
       username: userData.username,
       email: userData.email,
       totalWorkouts: userData.totalWorkouts || 0,
       totalWeight: userData.totalWeight || 0,
+      friends: userData.friends || [],
       avatar: "👤",
-    }
-    setCurrentUser(backendUser)
-    localStorage.setItem('fittracker_user', JSON.stringify(backendUser))
+    };
+    setCurrentUser(backendUser);
+    localStorage.setItem('fittracker_user', JSON.stringify(backendUser));
     if (token) {
-      localStorage.setItem('fittracker_token', token)
+      localStorage.setItem('fittracker_token', token);
     }
-  }
+  };
 
-  const handleLogout = ()=> {
-    setCurrentUser(null)
-    localStorage.removeItem('fittracker_user')
-    setActiveTab('workout')
-  }
+  const handleLogout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem('fittracker_user');
+    localStorage.removeItem('fittracker_token');
+    setActiveTab('workout');
+  };
   
   const renderActiveTab = () => {
     switch (activeTab) {
@@ -88,16 +74,15 @@ export default function Home() {
     return (
       <div className='max-w-md mx-auto bg-white min-h-screen flex items-center justify-center'>
         <div className='text-center'>
-          <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4'>
-            <p className='text-gray-600'>Loading...</p>
-          </div>
+          <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4'></div>
+          <p className='text-gray-600'>Loading...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (!currentUser) {
-    return <AuthPage onLogin={handleLogin} />
+    return <AuthPage onLogin={handleLogin} />;
   }
 
   return (

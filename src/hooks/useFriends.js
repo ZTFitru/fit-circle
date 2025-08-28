@@ -73,7 +73,8 @@ export const useFriends = () => {
       if (!res.ok) {
         return { success: false, message: data.error || res.statusText }
       }
-      fetchFriendsAndRequests();
+      
+      await fetchFriendsAndRequests();
       return { success: true, message: data.message || 'Friend request sent successfully' }
     
     } catch (err) {
@@ -114,6 +115,9 @@ export const useFriends = () => {
       }
 
       await fetchFriendsAndRequests();
+      if (refreshUser) {
+        refreshUser();
+      }
       return { success: true, message: data.message || 'Friend removed successfully' };
 
     } catch (err) {
@@ -151,6 +155,9 @@ export const useFriends = () => {
       }
 
       await fetchFriendsAndRequests();
+      if (refreshUser) {
+        refreshUser();
+      }
       return { success: true, message: data.message || 'Friend request accepted' };
 
     } catch (err) {
