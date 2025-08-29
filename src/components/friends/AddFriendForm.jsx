@@ -1,6 +1,5 @@
 'use client'
 import React from 'react';
-import toast from 'react-hot-toast';
 
 const AddFriendForm = ({ 
   showAddFriend, 
@@ -14,11 +13,8 @@ const AddFriendForm = ({
   const handleAdd = async ()=> {
     const result = await addFriend(newFriendName)
     if (result?.success) {
-      toast.success('Friend request sent!')
       setNewFriendName('')
       setShowAddFriend(false)
-    } else {
-      toast.error(result?.message || 'Failed to send request')
     }
   }
 
@@ -30,17 +26,21 @@ const AddFriendForm = ({
         value={newFriendName}
         onChange={(e) => setNewFriendName(e.target.value)}
         className="w-full p-2 border rounded-lg mb-2 text-black"
+        onKeyPress={(e) => e.key === 'Enter' && handleAdd()}
       />
       <div className="flex gap-2">
         <button
           onClick={handleAdd}
-          className="bg-green-500 text-white px-4 py-2 rounded-lg text-sm"
+          className="bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition-colors"
         >
           Add
         </button>
         <button
-          onClick={() => setShowAddFriend(false)}
-          className="bg-gray-500 text-white px-4 py-2 rounded-lg text-sm"
+          onClick={() => {
+            setShowAddFriend(false)
+            setNewFriendName('')
+          }}
+          className="bg-gray-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-600 transition-colors"
         >
           Cancel
         </button>

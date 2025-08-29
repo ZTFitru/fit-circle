@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { UserContext } from '@/context/UserContext';
 import toast from 'react-hot-toast';
 
@@ -10,6 +10,8 @@ export const useFriends = () => {
   const [newFriendName, setNewFriendName] = useState("");
   const [requests, setRequests] = useState([])
   const [loading, setLoading] = useState(true)
+  const addFriendInProgress = useRef(false);
+  const removeFriendInProgress = useRef(false);
 
   useEffect(() => {
     if (!currentUser?._id) return;
@@ -57,11 +59,20 @@ export const useFriends = () => {
   }, [currentUser?._id])
 
   const addFriend = async (username) => {
-    if (!currentUser?._id || !username.trim()) {
-      return { success: false, message: 'Missing user ID or username' }
+    if (addFriendInProgress.current) {
+      console.log('Add friend already in progress, ignoring duplicate call');
+      return { success: false, message: 'Request already in progress' };
     }
 
+    addFriendInProgress.current = true;
+
     try {
+      if (!currentUser?._id || !username.trim()) {
+        const message = 'Missing user ID or username';
+        toast.error(message);
+        return { success: false, message }
+      }
+
       const res = await fetch(`/api/friend-requests`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -71,27 +82,48 @@ export const useFriends = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        return { success: false, message: data.error || res.statusText }
+        const message = data.error || res.statusText;
+        toast.error(message);
+        return { success: false, message }
       }
       
       await fetchFriendsAndRequests();
-      return { success: true, message: data.message || 'Friend request sent successfully' }
+      const successMessage = data.message || 'Friend request sent successfully';
+      toast.success(successMessage);
+      return { success: true, message: successMessage }
     
     } catch (err) {
-      return { success: false, message: err.message || 'Add friend failed' }
+      const message = err.message || 'Add friend failed';
+      toast.error(message);
+      return { success: false, message }
+    } finally {
+      setTimeout(() => {
+        addFriendInProgress.current = false;
+      }, 1000);
     }
   };
 
   const removeFriend = async (friendId) => {
-    if (!friendId) {
-      return { success: false, message: 'Friend ID is required' };
+    if (removeFriendInProgress.current) {
+      console.log('Remove friend already in progress, ignoring duplicate call');
+      return { success: false, message: 'Request already in progress' };
     }
 
-    if (!currentUser?._id) {
-      return { success: false, message: 'User not authenticated' };
-    }
+    removeFriendInProgress.current = true;
 
     try {
+      if (!friendId) {
+        const message = 'Friend ID is required';
+        toast.error(message);
+        return { success: false, message };
+      }
+
+      if (!currentUser?._id) {
+        const message = 'User not authenticated';
+        toast.error(message);
+        return { success: false, message };
+      }
+
       const res = await fetch(`/api/friends/${currentUser._id}`, { 
         method: "DELETE",
         headers: { 'Content-Type': 'application/json' },
@@ -111,24 +143,36 @@ export const useFriends = () => {
       }
 
       if (!res.ok) {
-        return { success: false, message: data.error || `Failed to remove friend (${res.status})` };
+        const message = data.error || `Failed to remove friend (${res.status})`;
+        toast.error(message);
+        return { success: false, message };
       }
 
       await fetchFriendsAndRequests();
       if (refreshUser) {
         refreshUser();
       }
-      return { success: true, message: data.message || 'Friend removed successfully' };
+      const successMessage = data.message || 'Friend removed successfully';
+      toast.success(successMessage);
+      return { success: true, message: successMessage };
 
     } catch (err) {
       console.error("Remove friend failed:", err);
-      return { success: false, message: err.message || 'Remove friend failed' };
+      const message = err.message || 'Remove friend failed';
+      toast.error(message);
+      return { success: false, message };
+    } finally {
+      setTimeout(() => {
+        removeFriendInProgress.current = false;
+      }, 1000);
     }
   };
 
   const acceptRequest = async (requestId) => {
     if (!requestId) {
-      return { success: false, message: 'Request ID is required' };
+      const message = 'Request ID is required';
+      toast.error(message);
+      return { success: false, message };
     }
 
     try {
@@ -151,24 +195,32 @@ export const useFriends = () => {
       }
 
       if (!res.ok) {
-        return { success: false, message: data.error || `Failed to accept request (${res.status})` };
+        const message = data.error || `Failed to accept request (${res.status})`;
+        toast.error(message);
+        return { success: false, message };
       }
 
       await fetchFriendsAndRequests();
       if (refreshUser) {
         refreshUser();
       }
-      return { success: true, message: data.message || 'Friend request accepted' };
+      const successMessage = data.message || 'Friend request accepted';
+      toast.success(successMessage);
+      return { success: true, message: successMessage };
 
     } catch (err) {
       console.error("Accept request failed:", err);
-      return { success: false, message: err.message || 'Accept request failed' };
+      const message = err.message || 'Accept request failed';
+      toast.error(message);
+      return { success: false, message };
     }
   };
 
   const rejectRequest = async (requestId) => {
     if (!requestId) {
-      return { success: false, message: 'Request ID is required' };
+      const message = 'Request ID is required';
+      toast.error(message);
+      return { success: false, message };
     }
 
     try {
@@ -191,15 +243,21 @@ export const useFriends = () => {
       }
 
       if (!res.ok) {
-        return { success: false, message: data.error || `Failed to reject request (${res.status})` };
+        const message = data.error || `Failed to reject request (${res.status})`;
+        toast.error(message);
+        return { success: false, message };
       }
 
       await fetchFriendsAndRequests();
-      return { success: true, message: data.message || 'Friend request rejected' };
+      const successMessage = data.message || 'Friend request rejected';
+      toast.success(successMessage);
+      return { success: true, message: successMessage };
 
     } catch (err) {
       console.error("Reject request failed:", err);
-      return { success: false, message: err.message || 'Reject request failed' };
+      const message = err.message || 'Reject request failed';
+      toast.error(message);
+      return { success: false, message };
     }
   };
 

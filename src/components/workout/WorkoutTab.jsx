@@ -13,12 +13,9 @@ const WorkoutTab = ({
   newExerciseName,
   setNewExerciseName,
   deleteWorkout,
-  updateCurrentWorkout
+  updateCurrentWorkout,
+  startWorkout,
 }) => {
-
-  const startWorkout = (workout)=> {
-    setCurrentWorkout(workout)
-  }
 
   return (
     <div>

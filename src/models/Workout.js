@@ -17,6 +17,8 @@ const WorkoutSchema = new mongoose.Schema({
       ]
     }
   ],
+  startedAt: { type: Date },
+  completed: { type: Boolean, default: false },
   date: { type: Date, default: Date.now }
 });
 

@@ -58,7 +58,7 @@ const ActiveWorkout = ({
   };
 
   return (
-    <div>
+    <div className="flex-1 overflow-y-auto pb-24">
       <div className="bg-blue-50 p-4 rounded-lg mb-4">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-lg font-bold text-blue-800">Current Workout</h2>

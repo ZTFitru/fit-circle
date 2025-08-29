@@ -3,9 +3,9 @@ import React from 'react';
 import { Play, Check, Trash2 } from 'lucide-react';
 
 const WorkoutList = ({ workouts, startWorkout, deleteWorkout }) => (
-  <div>
+  <div className='flex flex-col h-full'>
     <h2 className="text-xl font-bold mb-4 text-black">My Workouts</h2>
-    <div className="space-y-3">
+    <div className="flex-1 space-y-3 overflow-y-auto pb-20">
       {workouts.map(workout => (
         <div key={workout._id} className="bg-white p-4 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between">
