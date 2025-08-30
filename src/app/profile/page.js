@@ -4,6 +4,10 @@ import Image from "next/image";
 import { UserContext } from "@/context/UserContext";
 import Header from "@/components/common/Header";
 import BottomNav from "@/components/layout/BottomNav";
+import BadgesSection from "@/components/profile/BadgesSection"
+import GoalsSection from "@/components/profile/GoalsSection"
+import WorkoutHistorySection from "@/components/profile/WorkoutHistorySection"
+
 
 const ProfilePage = () => {
     const { currentUser, setCurrentUser } = useContext(UserContext)
