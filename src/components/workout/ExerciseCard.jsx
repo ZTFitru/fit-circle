@@ -33,7 +33,7 @@ const ExerciseCard = ({ exercise, index, removeExercise, updateExercise }) => {
 
       <ul className="space-y-2">
         {exercise.sets.map((set, i) => (
-          <li key={i} className="flex justify-between items-center bg-gray-100 p-2 rounded">
+          <li key={i} className="flex justify-between items-center bg-gray-100 text-black p-2 rounded">
             <span>{set.reps} reps × {set.weight} lbs</span>
             <button onClick={() => deleteSet(i)} className="text-red-400 hover:text-red-600">
               <Trash2 size={16} />

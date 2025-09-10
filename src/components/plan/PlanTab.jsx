@@ -11,8 +11,7 @@ const PlanTab = ({
   loading,
   error
 }) => (
-  <div>
-    <h2 className="text-xl font-bold mb-4 text-black">Plan Your Workout</h2>
+  <div className='flex flex-col min-h-full'>
     <p className="text-gray-600 mb-4">Choose a body part to focus on:</p>
     
     <BodyPartGrid 

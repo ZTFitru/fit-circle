@@ -3,6 +3,7 @@ import React from 'react';
 import { UserPlus } from 'lucide-react';
 import FriendCard from './FriendCard';
 import AddFriendForm from './AddFriendForm';
+import toast from 'react-hot-toast';
 
 const FriendsTab = ({ 
   friends, 
@@ -15,7 +16,20 @@ const FriendsTab = ({
   requests,
   acceptRequest,
   rejectRequest,
-}) => (
+}) => {
+
+  const handleAccept = async (id)=> {
+    await acceptRequest(id)
+    toast.success('Friend added successfully')
+  }
+
+  const handleReject = async (id)=> {
+    await rejectRequest(id)
+    toast.error('Friend. request rejected')
+  }
+
+  return (
+
   <div>
     <div className="flex items-center justify-between mb-4">
       <button
@@ -44,13 +58,13 @@ const FriendsTab = ({
               <span className="text-black">{req.from?.username || "Unknown"}</span>
               <div className="flex gap-2">
                 <button
-                  onClick={() => acceptRequest(req._id)}
+                  onClick={() => handleAccept(req._id)}
                   className="bg-green-500 text-white px-2 py-1 rounded"
                 >
                   Accept
                 </button>
                 <button
-                  onClick={() => rejectRequest(req._id)}
+                  onClick={() => handleReject(req._id)}
                   className="bg-red-500 text-white px-2 py-1 rounded"
                 >
                   Reject
@@ -65,6 +79,7 @@ const FriendsTab = ({
       ))}
     </div>
   </div>
-);
+  )
+};
 
 export default FriendsTab;

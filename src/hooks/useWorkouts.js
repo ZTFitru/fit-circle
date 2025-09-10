@@ -38,8 +38,33 @@ export const useWorkouts = () => {
     }
   };
 
-  const startWorkout = (workout) => {
-    setCurrentWorkout(workout);
+  const startWorkout = async (workout) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch(`/api/workouts/${workout._id}/start`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...workout, startedAt: new Date().toISOString() })
+      });
+
+      if (response.ok) {
+        const updatedWorkout = await response.json();
+        setWorkouts(prev =>
+          prev.map(w => (w._id === updatedWorkout._id ? updatedWorkout : w))
+        );
+        setCurrentWorkout(updatedWorkout);
+      } else {
+        const errorData = await response.text();
+        throw new Error(`Failed to start workout: ${response.status} - ${errorData}`);
+      }
+    } catch (err) {
+      console.error('Error starting workout:', err);
+      setError('Failed to start workout');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const completeWorkout = async () => {
@@ -72,7 +97,7 @@ export const useWorkouts = () => {
         ));
         setCurrentWorkout(null);
         if (refreshUser) {
-          refreshUser();
+          await refreshUser();
         }
 
         router.push('/');

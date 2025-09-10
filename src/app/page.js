@@ -1,74 +1,19 @@
 'use client'
 
-import React, { useEffect, useState, useContext } from 'react';
-import MainLayout from '@/components/layout/MainLayout';
-import BottomNav from '@/components/layout/BottomNav';
-import WorkoutTab from '@/components/workout/WorkoutTab';
-import PlanTab from '@/components/plan/PlanTab';
-import FriendsTab from '@/components/friends/FriendsTab';
-import LeaderboardTab from '@/components/leaderboard/LeaderboardTab';
-import { useWorkouts } from '@/hooks/useWorkouts';
-import { useFriends } from '@/hooks/useFriends';
+import React, { useEffect, useContext } from 'react';
 import AuthPage from '@/components/auth/AuthPage';
 import { UserContext } from '@/context/UserContext';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState('workout');
   const { currentUser, setCurrentUser, loading } = useContext(UserContext);
-  const workoutHook = useWorkouts();
-  const friendsHook = useFriends();
+  const router = useRouter();
 
-  const handleLogin = (userData, token) => {
-    const backendUser = {
-      _id: userData._id,
-      username: userData.username,
-      email: userData.email,
-      totalWorkouts: userData.totalWorkouts || 0,
-      totalWeight: userData.totalWeight || 0,
-      friends: userData.friends || [],
-      avatar: "👤",
-    };
-    setCurrentUser(backendUser);
-    localStorage.setItem('fittracker_user', JSON.stringify(backendUser));
-    if (token) {
-      localStorage.setItem('fittracker_token', token);
+  useEffect(() => {
+    if (currentUser) {
+      router.push('/workouts');
     }
-  };
-
-  const handleLogout = () => {
-    setCurrentUser(null);
-    localStorage.removeItem('fittracker_user');
-    localStorage.removeItem('fittracker_token');
-    setActiveTab('workout');
-  };
-  
-  const renderActiveTab = () => {
-    switch (activeTab) {
-      case 'workout':
-        return <WorkoutTab {...workoutHook} />;
-      case 'plan':
-        return <PlanTab {...workoutHook} />;
-      case 'friends':
-        return (
-          <FriendsTab
-            friends={friendsHook.friends}
-            showAddFriend={friendsHook.showAddFriend}
-            setShowAddFriend={friendsHook.setShowAddFriend}
-            newFriendName={friendsHook.newFriendName}
-            setNewFriendName={friendsHook.setNewFriendName}
-            addFriend={friendsHook.addFriend}
-            removeFriend={friendsHook.removeFriend}
-            requests={friendsHook.requests}
-            acceptRequest={friendsHook.acceptRequest}
-            rejectRequest={friendsHook.rejectRequest}
-          />
-        );
-      case 'leaderboard':
-        return <LeaderboardTab />;
-      default:
-        return <WorkoutTab {...workoutHook} />;
-    }
-  };
+  }, [currentUser, router]);
 
   if (loading) {
     return (
@@ -82,13 +27,16 @@ export default function Home() {
   }
 
   if (!currentUser) {
-    return <AuthPage onLogin={handleLogin} />;
+    return (
+      <AuthPage
+        onLogin={(user, token) => {
+          setCurrentUser(user);
+          localStorage.setItem('fittracker_user', JSON.stringify(user));
+          if (token) localStorage.setItem('fittracker_token', token);
+        }}
+      />
+    );
   }
 
-  return (
-    <MainLayout currentUser={currentUser} onLogout={handleLogout}>
-      {renderActiveTab()}
-      <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
-    </MainLayout>
-  );
-};
+  return null;
+}

@@ -2,8 +2,11 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, User, Lock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useContext } from 'react';
+import { UserContext } from '@/context/UserContext';
 
 const LoginForm = ({ onLogin }) => {
+  const { refreshUser } = useContext(UserContext)
   const router = useRouter();
   const [formData, setFormData] = useState({
     username: '',
@@ -40,6 +43,7 @@ const LoginForm = ({ onLogin }) => {
           username: formData.username,
           password: formData.password,
         }),
+        credentials: 'include' 
       })
 
       const data = await res.json()
@@ -47,10 +51,16 @@ const LoginForm = ({ onLogin }) => {
         setError(data.error || 'Invalid username or password')
         return;
       }
-      localStorage.setItem('token', data.token)
+      await refreshUser()
+      
+      if (onLogin) {
+        onLogin(data.user)
+      }
 
-      onLogin(data.user)
+      router.push('/workouts') 
+
     } catch (err) {
+      console.error('Login error:', err);
       setError('Login failed. Please try again.');
     } finally {
       setLoading(false);
@@ -65,7 +75,7 @@ const LoginForm = ({ onLogin }) => {
         </div>
       )}
 
-      {/* Username Field */}
+      {/* username */}
       <div>
         <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
           Username
@@ -84,7 +94,7 @@ const LoginForm = ({ onLogin }) => {
         </div>
       </div>
 
-      {/* Password Field */}
+      {/* password */}
       <div>
         <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
           Password
@@ -110,7 +120,7 @@ const LoginForm = ({ onLogin }) => {
         </div>
       </div>
 
-      {/* Forgot Password Link */}
+      {/* forgot password */}
       <div className="text-right">
         <button
           type="button"
@@ -121,7 +131,6 @@ const LoginForm = ({ onLogin }) => {
         </button>
       </div>
 
-      {/* Submit Button */}
       <button
         type="submit"
         disabled={loading}
