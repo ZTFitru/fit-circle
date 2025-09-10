@@ -24,12 +24,6 @@ export async function GET(req) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    console.log('Found user:', {
-      id: user._id,
-      email: user.email,
-      profileImage: user.profileImage
-    });
-
     return NextResponse.json({ user }, { status: 200 });
   } catch (err) {
     console.error("Error in /api/auth/me:", err);
