@@ -65,7 +65,7 @@ const LoginForm = ({ onLogin }) => {
         </div>
       )}
 
-      {/* Username Field */}
+      {/* username */}
       <div>
         <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
           Username
@@ -84,7 +84,7 @@ const LoginForm = ({ onLogin }) => {
         </div>
       </div>
 
-      {/* Password Field */}
+      {/* pasword */}
       <div>
         <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
           Password
@@ -110,7 +110,7 @@ const LoginForm = ({ onLogin }) => {
         </div>
       </div>
 
-      {/* Forgot Password Link */}
+      {/* forgot password */}
       <div className="text-right">
         <button
           type="button"
@@ -121,7 +121,6 @@ const LoginForm = ({ onLogin }) => {
         </button>
       </div>
 
-      {/* Submit Button */}
       <button
         type="submit"
         disabled={loading}

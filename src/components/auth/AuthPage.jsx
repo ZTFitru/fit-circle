@@ -9,7 +9,7 @@ const AuthPage = ({ onLogin }) => {
 
   return (
     <div className="max-w-md mx-auto bg-white min-h-screen flex flex-col">
-      {/* Header */}
+      {/* header */}
       <div className="bg-gradient-to-r from-green-600 to-purple-600 text-white p-6 text-center">
         <div className="flex items-center justify-center gap-2 mb-3">
           <Dumbbell size={32} />
@@ -20,7 +20,6 @@ const AuthPage = ({ onLogin }) => {
         </p>
       </div>
 
-      {/* Auth Form Container */}
       <div className="flex-1 p-6 flex flex-col justify-center">
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
@@ -34,14 +33,12 @@ const AuthPage = ({ onLogin }) => {
           </p>
         </div>
 
-        {/* Auth Forms */}
         {isLogin ? (
           <LoginForm onLogin={onLogin} />
         ) : (
           <RegisterForm onRegister={onLogin} />
         )}
 
-        {/* Switch Between Login/Register */}
         <div className="mt-6 text-center">
           <p className="text-gray-600 text-sm">
             {isLogin ? "Don't have an account?" : 'Already have an account?'}
@@ -55,7 +52,6 @@ const AuthPage = ({ onLogin }) => {
         </div>
       </div>
 
-      {/* Footer */}
       <div className="p-4 text-center text-xs text-gray-500 border-t">
         <p>By continuing, you agree to our Terms & Privacy Policy</p>
       </div>

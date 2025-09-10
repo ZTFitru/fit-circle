@@ -97,7 +97,7 @@ export const useWorkouts = () => {
         ));
         setCurrentWorkout(null);
         if (refreshUser) {
-          refreshUser();
+          await refreshUser();
         }
 
         router.push('/');

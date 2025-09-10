@@ -43,3 +43,6 @@ next-env.d.ts
 
 # mongodb
 .env
+
+# user uploads
+/public/uploads/

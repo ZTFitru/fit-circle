@@ -97,7 +97,6 @@ const RegisterForm = ({ onRegister }) => {
         </div>
       )}
 
-      {/* Username Field */}
       <div>
         <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
           Username
@@ -116,7 +115,6 @@ const RegisterForm = ({ onRegister }) => {
         </div>
       </div>
 
-      {/* Email Field */}
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
           Email
@@ -135,7 +133,6 @@ const RegisterForm = ({ onRegister }) => {
         </div>
       </div>
 
-      {/* Password Field */}
       <div>
         <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
           Password
@@ -161,7 +158,6 @@ const RegisterForm = ({ onRegister }) => {
         </div>
       </div>
 
-      {/* Confirm Password Field */}
       <div>
         <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
           Confirm Password
@@ -187,7 +183,6 @@ const RegisterForm = ({ onRegister }) => {
         </div>
       </div>
 
-      {/* Submit Button */}
       <button
         type="submit"
         disabled={loading}

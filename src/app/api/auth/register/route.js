@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
+import { availableBadges } from "@/data/badges";
 
 export async function POST(req) {
   try {
@@ -19,6 +20,12 @@ export async function POST(req) {
       username,
       email,
       password: hashedPassword,
+      badges: availableBadges.map(b => ({
+        badgeId: b.id,
+        earned: false,
+        earnedDate: null,
+        progress: 0
+      }))
     });
 
     await newUser.save();
