@@ -44,7 +44,9 @@ export async function POST(request) {
 
     await writeFile(filepath, buffer)
 
-    const imageUrl = `/uploads/profiles/${filename}`
+    // const imageUrl = `/uploads/profiles/${filename}`
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const imageUrl = `${baseUrl}/uploads/profiles/${filename}`;
     const user = await User.findById(userId)
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
