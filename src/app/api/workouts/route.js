@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Workout from "@/models/Workout";
 
-// GET workouts for a specific user
 export async function GET(req) {
   try {
     await connectDB();
@@ -21,7 +20,6 @@ export async function GET(req) {
   }
 }
 
-// POST new workout
 export async function POST(req) {
   try {
     await connectDB();

@@ -51,7 +51,7 @@ export const availableBadges = [
         id: 5,
         name: '100,000 lbs club',
         description: 'Accumulate 100,000 lbs total weight',
-        image: '/images/badges/10000lbsClub.png',
+        image: '/images/badges/100000lbsClub.png',
         earned: false,
         earnedDate: null,
         progress: 0,
