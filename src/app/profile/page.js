@@ -22,6 +22,7 @@ const ProfilePage = () => {
     }
 
     const { refreshUser } = useContext(UserContext);
+    
     const handleImageChange = async (event) => {
         const file = event.target.files[0];
         if (!file) return;

@@ -1,9 +1,14 @@
 import { NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
-import path from 'path'
 import { connectDB } from '@/lib/mongodb'
 import User from '@/models/User'
 import jwt from 'jsonwebtoken'
+import ImageKit from "imagekit";
+
+const imagekit = new ImageKit({
+  publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+  privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+  urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
+})
 
 export async function POST(request) {
   try {
@@ -35,23 +40,17 @@ export async function POST(request) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    const uploadsDir = path.join(process.cwd(), 'public/uploads/profiles')
-    await mkdir(uploadsDir, { recursive: true })
+    const uploadResponse = await imagekit.upload({
+      file: buffer,
+      fileName: `profile-${userId}-${Date.now()}${file.name ? '.' + file.name.split('.').pop() : ''}`,
+      folder: "/profiles"
+    })
 
-    const fileExtension = path.extname(file.name)
-    const filename = `profile-${userId}-${Date.now()}${fileExtension}`
-    const filepath = path.join(uploadsDir, filename)
-
-    await writeFile(filepath, buffer)
-
-    // const imageUrl = `/uploads/profiles/${filename}`
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const imageUrl = `${baseUrl}/uploads/profiles/${filename}`;
     const user = await User.findById(userId)
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
-    user.profileImage = imageUrl
+    user.profileImage = uploadResponse.url
     await user.save()
 
     const userResponse = {
@@ -69,7 +68,7 @@ export async function POST(request) {
 
     return NextResponse.json({
       success: true,
-      imageUrl,
+      imageUrl: uploadResponse.url,
       user: userResponse,
       message: 'Profile image updated successfully',
     })
