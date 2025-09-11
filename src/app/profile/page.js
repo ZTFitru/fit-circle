@@ -117,13 +117,13 @@ const ProfilePage = () => {
                         </button>
                         {activeSection === "badges" && <BadgesSection />}
 
-                        <button
+                        {/* <button
                             onClick={() => setActiveSection(activeSection === "goals" ? null : "goals")}
                             className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
                         >
                             Goals
                         </button>
-                        {activeSection === "goals" && <GoalsSection />}
+                        {activeSection === "goals" && <GoalsSection />} */}
 
                         <button
                             onClick={() => setActiveSection(activeSection === "history" ? null : "history")}
