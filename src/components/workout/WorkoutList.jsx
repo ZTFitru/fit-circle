@@ -15,8 +15,8 @@ const WorkoutList = ({ workouts, startWorkout, deleteWorkout }) => (
             <div>
               <h3 className="font-medium text-black">{workout.name}</h3>
               <p className="text-sm text-gray-500">
-                {workout.exercises?.length || 0} exercises •{" "}
-                {workout.bodyPart || "N/A"}
+                {workout.exercises?.length || 0} exercises 
+                {/* {workout.bodyPart || "N/A"} */}
               </p>
             </div>
             <div className="flex items-center gap-2">

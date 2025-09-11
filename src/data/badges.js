@@ -82,5 +82,53 @@ export const availableBadges = [
         target: 1000000,
         type: 'weight',
         condition: ({totalWeight})=> totalWeight >= 1000000
-    }
+    },
+    {
+        id: 8,
+        name: '5 Workout',
+        description: 'Complete 5 workouts',
+        image: '/images/badges/5Workouts.png',
+        earned: false,
+        earnedDate: null,
+        progress: 0,
+        target: 5,
+        type: 'workouts',
+        condition: ({ totalWorkouts}) => totalWorkouts >= 5
+    },
+    {
+        id: 9,
+        name: '10 Workout',
+        description: 'Complete 10 workouts',
+        image: '/images/badges/10Workouts.png',
+        earned: false,
+        earnedDate: null,
+        progress: 0,
+        target: 10,
+        type: 'workouts',
+        condition: ({ totalWorkouts}) => totalWorkouts >= 10
+    },
+    {
+        id: 10,
+        name: '50 Workout',
+        description: 'Complete 50 workouts',
+        image: '/images/badges/50Workouts.png',
+        earned: false,
+        earnedDate: null,
+        progress: 0,
+        target: 50,
+        type: 'workouts',
+        condition: ({ totalWorkouts}) => totalWorkouts >= 50
+    },
+    {
+        id: 11,
+        name: '100 Workout',
+        description: 'Complete 100 workouts',
+        image: '/images/badges/100Workouts.png',
+        earned: false,
+        earnedDate: null,
+        progress: 0,
+        target: 100,
+        type: 'workouts',
+        condition: ({ totalWorkouts}) => totalWorkouts >= 100
+    },
 ]
